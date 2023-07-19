@@ -7,7 +7,7 @@
   "author": "Poe <poe@trufan.io>",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles --forceExit"
+    "test": "NODE_ENV=test jest --testTimeout=10000 --forceExit"
   },
   "devDependencies": {
     "@jest/globals": "^29.6.1",

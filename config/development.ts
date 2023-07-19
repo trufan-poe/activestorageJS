@@ -7,7 +7,5 @@ export default () => ({
     assetHost: process.env.ASSET_URL || 'http://localhost:4000',
     service: new DiskService(),
   },
-  host: process.env.POSTGRES_HOST || 'localhost',
   awsUrl: process.env.AWS_S3_URL,
-  logging: true,
 });
