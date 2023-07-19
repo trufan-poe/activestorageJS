@@ -1,3 +1,6 @@
+/* eslint no-useless-escape: 0 */ // --> OFF
+/* eslint  no-control-regex: 0 */
+
 /**
  *Provides a base set of methods and behaviours that will be used across other service modules
  */
@@ -20,10 +23,7 @@ export abstract class StorageService {
    * @param {any} opts - Optional sanitization settings.  Can controll padding or fallback filenames
    */
   contestDispositionWith(type: string, filename: string, opts: any): string {
-    return `${this.cleanedType(type)}; filename=\"${this.sanitize(
-      filename,
-      opts,
-    )}\"`;
+    return `${this.cleanedType(type)}; filename="${this.sanitize(filename, opts)}"`;
   }
 
   cleanedType(type: string): string {
@@ -48,10 +48,7 @@ export abstract class StorageService {
       .replace(/[\x00-\x1F\/\\:\*\?\"<>\|]/g, '')
       .replace(/\s+/u, ' ');
 
-    cleanedName = this.filterWindowsReservedNames(
-      cleanedName,
-      filenameFallback,
-    );
+    cleanedName = this.filterWindowsReservedNames(cleanedName, filenameFallback);
     cleanedName = this.filterDots(cleanedName, filenameFallback);
     cleanedName = this.filenameFallback(cleanedName, filenameFallback);
     return cleanedName;
@@ -84,7 +81,7 @@ export abstract class StorageService {
       'LPT6',
       'LPT7',
       'LPT8',
-      'LPT9',
+      'LPT9'
     ];
     // TODO: add fallback code here
     return wrn.includes(name.toUpperCase()) ? fallback : name;

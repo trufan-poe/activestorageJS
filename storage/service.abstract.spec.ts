@@ -1,33 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Test, TestingModule } from '@nestjs/testing';
-import { StorageService } from './service.abstract';
 import { describe } from 'node:test';
+import { StorageService } from './service.abstract';
+
 describe('StorageService', () => {
   let service: StorageService;
 
   beforeEach(async () => {
     class ServiceClass extends StorageService {
-      constructor() {
-        super();
-      }
       download(key: string) {
         return true;
       }
-      upload(key: string, filepath: string): void {
-        return;
-      }
+
+      upload(key: string, filepath: string): void {}
+
       streamDownload(key: string, filepath: string): string {
         return 'done';
       }
-      url(key: string): void {
-        return;
-      }
+
+      url(key: string): void {}
+
       exists(key: string): boolean {
-        return true || key.length == 0;
+        return true || key.length === 0;
       }
-      delete(key: string, filepath: string): void {
-        return;
-      }
+
+      delete(key: string, filepath: string): void {}
     }
 
     service = new ServiceClass();
@@ -54,29 +50,17 @@ describe('StorageService', () => {
     });
 
     it('Returns inline disposition if specified disposition is invalid', () => {
-      const disposition = service.contestDispositionWith(
-        'something bad',
-        '',
-        [],
-      );
+      const disposition = service.contestDispositionWith('something bad', '', []);
       expect(disposition.startsWith('inline')).toBe(true);
     });
 
     it('Returns a full, valid Content-Disposition string', () => {
-      const disposition = service.contestDispositionWith(
-        'attachments',
-        'test.txt',
-        [],
-      );
-      expect('inline; filename="test.txt"' === disposition).toBe(true);
+      const disposition = service.contestDispositionWith('attachments', 'test.txt', []);
+      expect(disposition === 'inline; filename="test.txt"').toBe(true);
     });
 
     it('Filenames are sanitized', () => {
-      const disposition = service.contestDispositionWith(
-        '',
-        ' some/\\<>thing: ',
-        [],
-      );
+      const disposition = service.contestDispositionWith('', ' some/\\<>thing: ', []);
       expect(disposition.includes('"something"')).toBe(true);
     });
   });
@@ -130,9 +114,7 @@ describe('StorageService', () => {
     });
 
     it('Sanitization removes filename-unsafe characters in combination', () => {
-      expect(service.sanitize(' what\\ēver//wëird:înput:', {})).toBe(
-        'whatēverwëirdînput',
-      );
+      expect(service.sanitize(' what\\ēver//wëird:înput:', {})).toBe('whatēverwëirdînput');
     });
 
     it('A fallback is provided if no input is given', () => {
@@ -144,9 +126,7 @@ describe('StorageService', () => {
     });
 
     it('Custom fallback can be specified', () => {
-      expect(service.sanitize('', { filenameFallback: 'customName' })).toBe(
-        'customName',
-      );
+      expect(service.sanitize('', { filenameFallback: 'customName' })).toBe('customName');
     });
 
     it('Sanitization removes all windows-unsafe strings', () => {

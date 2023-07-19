@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DiskService } from './disk.service';
 import configuration from 'config/configuration';
+import { DiskService } from './disk.service';
+
 describe('DiskService', () => {
   let service: DiskService;
   const localKey = 'external/activestorage_ex_rails/storage/';
-  const railsStorageDirectory = 'external/activestorage_ex_rails/storage/';
+  // const railsStorageDirectory = 'external/activestorage_ex_rails/storage/';
 
   beforeAll(() => {
     service = configuration().activeStorage.service;
@@ -35,7 +35,7 @@ describe('DiskService', () => {
       expect(service).toBeDefined();
     });
   });
-  describe('path_for', () => {
+  describe('pathFor', () => {
     it('should be defined', () => {
       expect(service).toBeDefined();
     });
