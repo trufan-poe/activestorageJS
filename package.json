@@ -7,7 +7,13 @@
   "author": "Poe <poe@trufan.io>",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test jest --testTimeout=10000 --forceExit"
+    "test": "NODE_ENV=test jest --testTimeout=10000 --forceExit",
+    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{ts,css,html}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run prettier:check"
+    }
   },
   "devDependencies": {
     "@jest/globals": "^29.6.1",
