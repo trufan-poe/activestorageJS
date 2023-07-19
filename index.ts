@@ -1,6 +1,7 @@
-import { StorageService } from './storage/service.abstract';
 import configuration from 'config/configuration';
 import { verify, sign, JsonWebTokenError } from 'jsonwebtoken';
+import { StorageService } from './storage/service.abstract';
+
 export class ActiveStorageJS {
   /**
    * Returns the service module specified in config
@@ -18,7 +19,7 @@ export class ActiveStorageJS {
    * @return {any} Env Variable
    */
   env(name): string {
-    return configuration().activeStorage.rootPath;
+    return configuration().activeStorage[name];
   }
 
   /**
@@ -26,16 +27,15 @@ export class ActiveStorageJS {
    *  An expiration can optionally be specified
    *
    * @param {any} payload - The Map you want to encode
-   * @param {any} token_duration: The token expiration.  Leave `nil` to generate
+   * @param {any} tokenDuration: The token expiration.  Leave `nil` to generate
    *  a non-expiring token
    * @return {strign} URL-Safe signed string
    */
-  signMessage(payload, token_duration): any {
-    const expiresIn =
-      token_duration === null ? this.daysFromNow(10000) : token_duration;
+  signMessage(payload, tokenDuration): any {
+    const expiresIn = tokenDuration === null ? this.daysFromNow(10000) : tokenDuration;
     const token = sign(payload, configuration().activeStorage.jwtSecret, {
       algorithm: 'HS256',
-      expiresIn: expiresIn,
+      expiresIn
     });
     return btoa(token);
   }
@@ -48,12 +48,9 @@ export class ActiveStorageJS {
    * @return {any} claims
    */
   verifyMessage(encodedToken): any {
-    var payload;
+    let payload;
     try {
-      payload = verify(
-        atob(encodedToken),
-        configuration().activeStorage.jwtSecret,
-      );
+      payload = verify(atob(encodedToken), configuration().activeStorage.jwtSecret);
       return payload;
     } catch (e) {
       if (e instanceof JsonWebTokenError) {

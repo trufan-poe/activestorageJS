@@ -1,30 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ActiveStorageJS } from './index';
 import { describe } from 'node:test';
-import { DiskService } from './storage/disk/disk.service';
 import { verify, sign, validate } from 'jsonwebtoken';
 import configuration from 'config/configuration';
+import { DiskService } from './storage/disk/disk.service';
+import { ActiveStorageJS } from './index';
+
 describe('StorageService', () => {
-  let activeStorage: ActiveStorageJS;
-  activeStorage = new ActiveStorageJS();
+  const activeStorage = new ActiveStorageJS();
   it('should be defined', () => {
     expect(activeStorage).toBeDefined();
   });
 
   describe('env', () => {
     it('It reads environment variables', () => {
-      expect(activeStorage.env('rootPath')).toBe(
-        process.env.ELIXIR_STORAGE_PATH,
-      );
+      expect(activeStorage.env('rootPath')).toBe(process.env.ELIXIR_STORAGE_PATH);
     });
   });
 
   describe('service', () => {
     it('It returns a service module', () => {
       expect(typeof activeStorage.service()).toBe(typeof new DiskService());
-      const disposition = activeStorage
-        .service()
-        .contestDispositionWith('inline', '', []);
+      const disposition = activeStorage.service().contestDispositionWith('inline', '', []);
       expect(disposition.startsWith('inline')).toBe(true);
     });
   });
@@ -61,7 +57,7 @@ describe('StorageService', () => {
   describe('verifyMessage', () => {
     it('A generic error is returned for an invalid JWT', () => {
       const badToken = sign({}, 'gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr9C', {
-        algorithm: 'HS256',
+        algorithm: 'HS256'
       });
       expect(() => {
         activeStorage.verifyMessage(btoa(badToken));
