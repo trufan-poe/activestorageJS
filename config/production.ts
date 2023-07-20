@@ -1,4 +1,4 @@
-import { S3Service } from 'storage/s3/s3.service';
+import { S3Service } from '../storage/s3/s3.service';
 export default () => ({
   activeStorage: {
     jwtSecret: process.env.JWT_SECRET,

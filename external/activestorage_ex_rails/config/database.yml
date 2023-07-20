@@ -1,0 +1,15 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch('POSTGRES_HOST') { 'localhost' } %>
+  username: <%= ENV.fetch('POSTGRES_USER') { 'postgres' } %>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD') { 'postgres' } %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 4 } %>
+
+development:
+  <<: *default
+  database: activestorage_ex_development
+
+test:
+  <<: *default
+  database: activestorage_ex_test
