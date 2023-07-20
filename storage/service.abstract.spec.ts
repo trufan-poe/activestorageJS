@@ -14,13 +14,15 @@ describe('StorageService', () => {
       upload(key: string, filepath: string): void {}
 
       streamDownload(key: string, filepath: string): string {
-        return 'done';
+        return `${key + filepath}`;
       }
 
-      url(key: string): void {}
+      url(key: string, opts: any): string {
+        return key + opts.toString();
+      }
 
-      exists(key: string): boolean {
-        return true || key.length === 0;
+      async exists(key: string): Promise<boolean> {
+        return Promise.resolve(true || key.length === 0);
       }
 
       delete(key: string, filepath: string): void {}

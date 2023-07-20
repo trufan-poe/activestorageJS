@@ -11,8 +11,8 @@ export abstract class StorageService {
   abstract streamDownload(key: string, filepath: string): string;
   abstract upload(key: string, filepath: string): void;
   abstract delete(key: string, filepath: string): void;
-  abstract url(key: string): void;
-  abstract exists(key: string): boolean;
+  abstract url(key: string, opts: any): string;
+  abstract exists(key: string): Promise<boolean>;
 
   /**
    * Returns a valid Content-Disposition string from a provided

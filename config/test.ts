@@ -1,7 +1,7 @@
 import { DiskService } from 'storage/disk/disk.service';
 export default () => ({
   activeStorage: {
-    rootPath: process.env.ELIXIR_STORAGE_PATH || '../playr/storage',
+    rootPath: process.env.ELIXIR_STORAGE_PATH || './external/activestorage_ex_rails/storage',
     jwtSecret: process.env.JWT_SECRET,
     linkExpiration: null,
     assetHost: process.env.ASSET_URL || 'http://localhost.test',
