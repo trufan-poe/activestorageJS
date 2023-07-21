@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import { access, constants, rm } from 'node:fs/promises';
 import configuration from '../../config/configuration';
 import { DiskService } from './disk.service';
 
@@ -14,6 +15,23 @@ describe('DiskService', () => {
 
   const resetStoragePath = () => {
     process.env.ELIXIR_STORAGE_PATH = './external/activestorage_ex_rails/storage';
+  };
+
+  const exists = async (filepath: string): Promise<boolean> => {
+    try {
+      await access(filepath, constants.R_OK || constants.W_OK);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const removeFile = async (filepath: string): Promise<void> => {
+    try {
+      await rm(filepath, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    } catch (err) {
+      throw Error(err.message);
+    }
   };
 
   it('should be defined', () => {
@@ -48,19 +66,33 @@ describe('DiskService', () => {
     });
   });
   describe('download', () => {
-    // it('Returns a file from a given key as binary', async () => {
-    //   const downloadedFile = await service.download(localKey);
-    //   expect(downloadedFile).toBeDefined();
-    // });
-    it('Returns an error if the file cannot be found', () => {
+    it('Returns a file from a given key as binary', async () => {
+      const downloadedFile = await service.download(localKey);
+      expect(downloadedFile).toBeDefined();
+    });
+    it('Returns an error if the file cannot be found', async () => {
       process.env.ELIXIR_STORAGE_PATH = '/not/a/real/path';
       const newService = new DiskService();
       try {
-        newService.download(localKey);
+        await newService.download(localKey);
       } catch (error) {
-        expect(error).toBe('ENOENT');
+        expect(error.message).toBe('ENOENT');
       }
       resetStoragePath();
+    });
+  });
+  describe('streamDownload', () => {
+    it('An image is downloaded to the given filepath', async () => {
+      const filepath = 'streamtest/files/streamed.jpg';
+      const downloadedFile = await service.streamDownload(localKey, filepath);
+      expect(await exists(downloadedFile)).toBeTruthy();
+      await removeFile(filepath);
+    });
+    it('The filepath is returned upon success', async () => {
+      const filepath = 'streamtest/files/streamed.jpg';
+      const filepathReturned = await service.streamDownload(localKey, filepath);
+      expect(filepathReturned).toBe(filepath);
+      await removeFile(filepath);
     });
   });
 });

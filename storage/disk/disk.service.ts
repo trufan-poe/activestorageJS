@@ -3,6 +3,7 @@ import { join, dirname } from 'node:path';
 import { readFile, writeFile, mkdir, rm, copyFile, access, constants } from 'node:fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { ActiveStorageJS } from 'index';
+import { pipeline } from 'node:stream/promises';
 import config from '../../config/configuration';
 import { StorageService } from '../service.abstract';
 /**
@@ -19,10 +20,9 @@ export class DiskService extends StorageService {
    */
   async download(key: string): Promise<any> {
     try {
-      const file = await readFile(this.pathFor(key));
-      return file;
+      return await readFile(this.pathFor(key));
     } catch (err) {
-      throw new Error(err.code);
+      throw Error(err.code);
     }
   }
 
@@ -34,11 +34,19 @@ export class DiskService extends StorageService {
    * @param {filepath} - The desired filepath.  Note that directories will not be created
    * @return {filepath} - The created path of the file
    */
-  streamDownload(key: string, filepath: string): string {
-    const readableStream = createReadStream(this.pathFor(key));
-    const writableStream = createWriteStream(filepath);
-    readableStream.pipe(writableStream);
-    return filepath;
+  async streamDownload(key: string, filepath: string): Promise<string> {
+    try {
+      await mkdir(dirname(filepath), { recursive: true });
+      const readableStream = await createReadStream(this.pathFor(key), {
+        start: 0,
+        end: 5 * 1024 * 1024
+      });
+      const writableStream = await createWriteStream(filepath);
+      await pipeline(readableStream, writableStream);
+      return filepath;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   /**
