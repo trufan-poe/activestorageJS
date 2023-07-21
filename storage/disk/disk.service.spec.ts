@@ -3,6 +3,9 @@ import { access, constants, rm } from 'node:fs/promises';
 import configuration from '../../config/configuration';
 import { DiskService } from './disk.service';
 
+const util = require('util');
+const im = require('imagemagick');
+
 describe('DiskService', () => {
   let service: DiskService;
   // const railsStorageDirectory = 'external/activestorage_ex_rails/storage/';
@@ -93,6 +96,34 @@ describe('DiskService', () => {
       const filepathReturned = await service.streamDownload(localKey, filepath);
       expect(filepathReturned).toBe(filepath);
       await removeFile(filepath);
+    });
+  });
+  describe('upload', () => {
+    it('An image is sucessfully saved to disk', async () => {
+      const identifyPromise = util.promisify(im.identify);
+      await identifyPromise('test/files/image.jpg').then(async (image) => {
+        process.env.rootPath = 'streamtest/files/';
+        const key = 'test_key';
+        service = new DiskService();
+        await service.upload(image, key);
+        expect(await exists(service.pathFor(key))).toBeTruthy();
+        expect(true).toBeTruthy();
+        await removeFile(service.pathFor(key));
+      });
+      resetStoragePath();
+    });
+    it("Image directory is created if it doesn't exist", async () => {
+      const identifyPromise = util.promisify(im.identify);
+      await identifyPromise('test/files/image.jpg').then(async (image) => {
+        process.env.rootPath = 'streamtest/files/';
+        const key = 'non_existant_key';
+        expect(await exists(service.pathFor(key))).toBeFalsy();
+        service = new DiskService();
+        await service.upload(image, key);
+        expect(await exists(service.pathFor(key))).toBeTruthy();
+        await removeFile(service.pathFor(key));
+      });
+      resetStoragePath();
     });
   });
 });

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { join, dirname } from 'node:path';
-import { readFile, writeFile, mkdir, rm, copyFile, access, constants } from 'node:fs/promises';
+import { readFile, mkdir, rm, copyFile, access, constants } from 'node:fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { ActiveStorageJS } from 'index';
 import { pipeline } from 'node:stream/promises';
@@ -58,7 +58,7 @@ export class DiskService extends StorageService {
    */
   async upload(image: any, key: string): Promise<void> {
     try {
-      await writeFile(dirname(this.pathFor(key)), image);
+      await this.renameImage(image, key);
     } catch (err) {
       throw new Error(err);
     }
@@ -134,7 +134,7 @@ export class DiskService extends StorageService {
 
   private async makePathFor(key: string): Promise<boolean> {
     try {
-      await mkdir(dirname(this.pathFor(key)));
+      await mkdir(dirname(this.pathFor(key)), { recursive: true });
       return true;
     } catch (err) {
       throw Error(err.message);
@@ -152,10 +152,11 @@ export class DiskService extends StorageService {
   private async renameImage(image, key: string): Promise<any> {
     // File copy current --> new path
     try {
-      await copyFile(image.path, this.pathFor(key));
-      await rm(image.path);
+      await this.makePathFor(key);
+      await copyFile(image.filename, this.pathFor(key));
+      // await rm(image.filename);
       return image;
-    } catch {
+    } catch (err) {
       throw new Error('The file could not be copied');
     }
   }
