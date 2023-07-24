@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 import { access, constants, rm } from 'node:fs/promises';
 import configuration from '../../config/configuration';
 import { DiskService } from './disk.service';
+import { ActiveStorageJS } from '../../index';
 
 const util = require('util');
 const im = require('imagemagick');
@@ -16,8 +17,24 @@ describe('DiskService', () => {
     service = configuration().activeStorage.service;
   });
 
+  beforeEach(() => {
+    service = new DiskService();
+  });
+
   const resetStoragePath = () => {
     process.env.ELIXIR_STORAGE_PATH = './external/activestorage_ex_rails/storage';
+  };
+
+  const resetAssetHost = () => {
+    process.env.ASSET_URL = 'http://localhost.test';
+  };
+
+  const saveFile = async (key: string) => {
+    const identifyPromise = util.promisify(im.identify);
+    await identifyPromise('test/files/image.jpg').then(async (image) => {
+      process.env.rootPath = 'streamtest/files/';
+      await service.upload(image, key);
+    });
   };
 
   const exists = async (filepath: string): Promise<boolean> => {
@@ -35,6 +52,11 @@ describe('DiskService', () => {
     } catch (err) {
       throw Error(err.message);
     }
+  };
+
+  const jwtFromUrl = (key: string, opts: any): string => {
+    const jwt: string = service.url(key, opts);
+    return jwt.split('/')[5];
   };
 
   it('should be defined', () => {
@@ -55,15 +77,13 @@ describe('DiskService', () => {
     });
     it('Returned path is built based off of key name', () => {
       process.env.ELIXIR_STORAGE_PATH = '/';
-      const newService = new DiskService();
-      const pathFor = newService.pathFor('asdf');
+      const pathFor = service.pathFor('asdf');
       expect(pathFor).toBe('/as/df/asdf');
       resetStoragePath();
     });
     it('Custom root paths are built into returned path', () => {
       process.env.ELIXIR_STORAGE_PATH = '/root/path';
-      const newService = new DiskService();
-      const pathFor = newService.pathFor('asdf');
+      const pathFor = service.pathFor('asdf');
       expect(pathFor).toBe('/root/path/as/df/asdf');
       resetStoragePath();
     });
@@ -75,9 +95,8 @@ describe('DiskService', () => {
     });
     it('Returns an error if the file cannot be found', async () => {
       process.env.ELIXIR_STORAGE_PATH = '/not/a/real/path';
-      const newService = new DiskService();
       try {
-        await newService.download(localKey);
+        await service.download(localKey);
       } catch (error) {
         expect(error.message).toBe('ENOENT');
       }
@@ -104,7 +123,6 @@ describe('DiskService', () => {
       await identifyPromise('test/files/image.jpg').then(async (image) => {
         process.env.rootPath = 'streamtest/files/';
         const key = 'test_key';
-        service = new DiskService();
         await service.upload(image, key);
         expect(await exists(service.pathFor(key))).toBeTruthy();
         expect(true).toBeTruthy();
@@ -118,12 +136,71 @@ describe('DiskService', () => {
         process.env.rootPath = 'streamtest/files/';
         const key = 'non_existant_key';
         expect(await exists(service.pathFor(key))).toBeFalsy();
-        service = new DiskService();
         await service.upload(image, key);
         expect(await exists(service.pathFor(key))).toBeTruthy();
         await removeFile(service.pathFor(key));
       });
       resetStoragePath();
+    });
+  });
+  describe('delete', () => {
+    it('File is deleted if it exists', async () => {
+      const key = 'test_key';
+      await saveFile(key);
+      await service.delete(key);
+      expect(await exists(service.pathFor(key))).toBeFalsy();
+      await removeFile(service.pathFor(key));
+      resetStoragePath();
+    });
+    it("No error is thrown if a file doesn't exist", async () => {
+      const key = 'super_fake_test_key';
+      await service.delete(key);
+      await removeFile(service.pathFor(key));
+      resetStoragePath();
+    });
+  });
+  describe('url', () => {
+    it('The JWT contains disposition + filename, key, and content_type', async () => {
+      const jwt = jwtFromUrl('test_key', {
+        filename: 'test.png',
+        disposition: 'inline',
+        contentType: 'image/png'
+      });
+      const claims = new ActiveStorageJS().verifyMessage(jwt);
+      expect(claims.key).toBe('test_key');
+      expect(claims.disposition).toBe('inline; filename="test.png"');
+      expect(claims.content_type).toBe('image/png');
+    });
+    it('A custom host can be specified', async () => {
+      process.env.ASSET_URL = 'http://custom.host';
+      service = new DiskService();
+
+      const url: string = service.url('', { filename: '' });
+      expect(url.startsWith('http://custom.host')).toBeTruthy();
+      resetAssetHost();
+    });
+
+    it('The filename is present in the final URL', async () => {
+      const url: string = service.url('', { filename: 'test.png' });
+      expect(url.includes('/test.png')).toBeTruthy();
+    });
+
+    it('The full disposition is present in the final URL', async () => {
+      const url: string = service.url('', { filename: 'test.png', disposition: 'inline' });
+      expect(url.includes('disposition=inline%3B+filename%3D%22test.png%22')).toBeTruthy();
+    });
+
+    it('The content_type is present in the final URL', async () => {
+      const url: string = service.url('', { filename: '', contentType: 'image/png' });
+      expect(url.includes('content_type=image%2Fpng')).toBeTruthy();
+    });
+
+    it('Extra opts are discardedL', async () => {
+      const url: string = service.url('', {
+        filename: '',
+        customThingy: 'omiitedIdeally'
+      });
+      expect(url.includes('omiitedIdeally')).toBeFalsy();
     });
   });
 });

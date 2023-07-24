@@ -72,7 +72,7 @@ export class DiskService extends StorageService {
    */
   async delete(key: string): Promise<void> {
     try {
-      await rm(dirname(this.pathFor(key)), { force: true, maxRetries: 10, retryDelay: 100 });
+      await rm(this.pathFor(key), { force: true, maxRetries: 10, retryDelay: 100 });
     } catch (err) {
       throw Error(err.message);
     }
@@ -97,13 +97,13 @@ export class DiskService extends StorageService {
   url(key: string, opts: any): string {
     const disposition = this.contestDispositionWith(opts.disposition, opts.filename, {});
     const verifiedKeyWithExpiration = new ActiveStorageJS().signMessage(
-      { key, disposition, contentType: opts.contentType },
-      opts.tokenDuration
+      { key, disposition, content_type: opts.contentType },
+      opts.tokenDuration === undefined ? null : opts.tokenDuration
     );
     return this.diskServiceUrl(verifiedKeyWithExpiration, {
       host: config().activeStorage.assetHost,
       disposition,
-      content_type: opts.contentType,
+      contentType: opts.contentType,
       filename: opts.filename
     });
   }

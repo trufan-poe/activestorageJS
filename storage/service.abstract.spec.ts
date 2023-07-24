@@ -13,8 +13,8 @@ describe('StorageService', () => {
 
       upload(key: string, filepath: string): void {}
 
-      streamDownload(key: string, filepath: string): string {
-        return `${key + filepath}`;
+      streamDownload(key: string, filepath: string): Promise<string> {
+        return Promise.resolve(`${key + filepath}`);
       }
 
       url(key: string, opts: any): string {
