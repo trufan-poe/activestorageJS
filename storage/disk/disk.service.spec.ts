@@ -203,4 +203,12 @@ describe('DiskService', () => {
       expect(url.includes('omiitedIdeally')).toBeFalsy();
     });
   });
+  describe('exists', () => {
+    it('Returns true if a file with a given key exists', async () => {
+      expect(await service.exists(localKey)).toBeTruthy();
+    });
+    it("Returns false if a file with a given key doesn't exist", async () => {
+      expect(await service.exists('not_a_real_key')).toBeFalsy();
+    });
+  });
 });
