@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { access, constants, rm } from 'node:fs/promises';
 import configuration from '../../config/configuration';
 import { DiskService } from './disk.service';
@@ -10,8 +9,7 @@ const im = require('imagemagick');
 describe('DiskService', () => {
   let service: DiskService;
   // const railsStorageDirectory = 'external/activestorage_ex_rails/storage/';
-  const rakefilePath = 'external/activestorage_ex_rails';
-  const localKey = execSync(`cd ${rakefilePath}; bundle exec rake get_local_upload_key`).toString();
+  const localKey = 'rBUGDqWXt57DiVCEJYfqi8fX';
 
   beforeAll(() => {
     service = configuration().activeStorage.service;
@@ -22,7 +20,7 @@ describe('DiskService', () => {
   });
 
   const resetStoragePath = () => {
-    process.env.ELIXIR_STORAGE_PATH = './external/activestorage_ex_rails/storage';
+    process.env.ELIXIR_STORAGE_PATH = './external/disk/storage';
   };
 
   const resetAssetHost = () => {
