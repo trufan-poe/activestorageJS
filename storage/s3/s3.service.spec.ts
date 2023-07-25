@@ -120,20 +120,29 @@ describe('S3Service', () => {
   });
 
   describe('url', () => {
-    it('The full disposition is present in the final URL', () => {
-      expect(s3Service).toBeDefined();
+    it('The full disposition is present in the final URL', async () => {
+      const url = s3Service.url(testKey, {
+        filename: testKey,
+        disposition: 'inline'
+      });
+      expect(url).toContain('disposition=inline%3B+filename%3D%22testing_key%22');
     });
     it('The filename is present in the final URL', () => {
-      expect(s3Service).toBeDefined();
+      const url = s3Service.url(testKey, {
+        filename: testKey,
+        disposition: 'inline'
+      });
+      expect(url.split('/')[6].startsWith(testKey)).toBeTruthy();
     });
   });
 
   describe('exists', () => {
-    it('Returns true if a file with a given key exists', () => {
-      expect(s3Service).toBeDefined();
+    it('Returns true if a file with a given key exists', async () => {
+      await uploadTestImage(testKey);
+      expect(await s3Service.exists(testKey)).toBeTruthy();
     });
-    it("Returns false if a file with a given key doesn't exist", () => {
-      expect(s3Service).toBeDefined();
+    it("Returns false if a file with a given key doesn't exist", async () => {
+      expect(await s3Service.exists('fakey-key')).toBeFalsy();
     });
   });
 });
