@@ -8,11 +8,11 @@ export abstract class StorageService {
   acceptableDispositions: string[] = ['inline', 'attachment'];
 
   abstract download(key: string): any;
-  abstract streamDownload(key: string, filepath: string): string;
+  abstract streamDownload(key: string, filepath: string): Promise<string>;
   abstract upload(key: string, filepath: string): void;
   abstract delete(key: string, filepath: string): void;
-  abstract url(key: string): void;
-  abstract exists(key: string): boolean;
+  abstract url(key: string, opts: any): string;
+  abstract exists(key: string): Promise<boolean>;
 
   /**
    * Returns a valid Content-Disposition string from a provided

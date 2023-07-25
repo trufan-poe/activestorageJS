@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe } from 'node:test';
 import { verify, sign, validate } from 'jsonwebtoken';
-import configuration from 'config/configuration';
 import { DiskService } from './storage/disk/disk.service';
 import { ActiveStorageJS } from './index';
 

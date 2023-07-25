@@ -63,6 +63,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "imagemagick": "^0.1.3",
     "jsonwebtoken": "^9.0.1"
   }
 }
