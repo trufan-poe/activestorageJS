@@ -12,19 +12,19 @@ const Variation = {
   /**
    * An alias for encode/
    */
-  key: (transformations) => Variation.encode(transformations),
+  key: (transformations): string => Variation.encode(transformations),
   /**
    * Returns a base64 encoded string from an list of transformations
    *
    * @param {transformations} - `transformations`: A List of Maps representing the desired transformations
    */
-  encode: (transformations) => activeStorage.signMessage({ transformations }, null),
+  encode: (transformations): string => activeStorage.signMessage({ transformations }, null),
   /**
    * Returns a list of transformations from an encoded token
    *
    * @param {token} - `token`: `token`: A JWT representing transformations
    */
-  decode: (token) => {
+  decode: (token): any => {
     const claims = activeStorage.verifyMessage(token);
     return claims.transformations;
   },

@@ -123,7 +123,7 @@ export class DiskService extends StorageService {
   }
 
   /**
-   * Returns the path on disk for a given `%Blob{}` or `%Variant{}` key
+   * Returns the path on disk for a given `Blob` or `Variant` key
    *
    * @param {string} key - The blob or variant's key
    * @return {string} Path on disk
