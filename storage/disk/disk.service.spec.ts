@@ -9,7 +9,7 @@ const im = require('imagemagick');
 describe('DiskService', () => {
   let service: DiskService;
   // const railsStorageDirectory = 'external/activestorage_ex_rails/storage/';
-  const localKey = 'rBUGDqWXt57DiVCEJYfqi8fX';
+  const localKey = '3thAm8BFR5Jp1vW9H1u2XDDR';
 
   beforeAll(() => {
     service = configuration().activeStorage.service;

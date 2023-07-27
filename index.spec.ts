@@ -34,7 +34,7 @@ describe('StorageService', () => {
     it('A JWT is returned with no expiration', () => {
       const signedMessage = activeStorage.signMessage({}, null);
       const verifiedMessage = activeStorage.verifyMessage(signedMessage);
-      expect(verifiedMessage.exp).toBeGreaterThan(verifiedMessage.iat);
+      expect(verifiedMessage.exp).toBeUndefined();
     });
     it('A JWT with no expiration and the same payload always returns the same result', () => {
       const signedMessage1 = activeStorage.signMessage({ foo: 'bar' }, null);

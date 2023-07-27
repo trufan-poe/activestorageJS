@@ -32,11 +32,18 @@ export class ActiveStorageJS {
    * @return {strign} URL-Safe signed string
    */
   signMessage(payload, tokenDuration): any {
-    const expiresIn = tokenDuration === null ? this.daysFromNow(10000) : tokenDuration;
-    const token = sign(payload, configuration().activeStorage.jwtSecret, {
-      algorithm: 'HS256',
-      expiresIn
-    });
+    let token = null;
+    if (tokenDuration === null) {
+      token = sign(payload, configuration().activeStorage.jwtSecret, {
+        algorithm: 'HS256',
+        noTimestamp: true
+      });
+    } else {
+      token = sign(payload, configuration().activeStorage.jwtSecret, {
+        algorithm: 'HS256',
+        expiresIn: tokenDuration
+      });
+    }
     return btoa(token);
   }
 
