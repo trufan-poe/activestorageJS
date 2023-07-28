@@ -47,10 +47,12 @@ const Variation = {
     return tranformedImage;
   },
   applyTransformation: async (operations: any[], image): Promise<any> => {
+    // Either no operations to perform or we have performed all operations
     if (operations.length === 0) {
       const afd = await Variation.identify(image);
       return afd;
     }
+    // First pass, operations is not defined
     if (image.operations === undefined) image.operations = [];
 
     const convertPromise = util.promisify(im.convert);

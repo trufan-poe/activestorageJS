@@ -154,7 +154,7 @@ export class DiskService extends StorageService {
     try {
       await this.makePathFor(key);
       await copyFile(image.filename, this.pathFor(key));
-      // await rm(image.filename);
+      await rm(image.filename);
       return image;
     } catch (err) {
       throw new Error('The file could not be copied');
