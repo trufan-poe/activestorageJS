@@ -7,6 +7,6 @@ import { ActiveStorageController } from './active_storage/active_storage.control
 @Module({
   imports: [],
   controllers: [AppController, ShowController, ActiveStorageController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}

@@ -6,7 +6,7 @@ describe('ActiveStorageController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ActiveStorageController],
+      controllers: [ActiveStorageController]
     }).compile();
 
     controller = module.get<ActiveStorageController>(ActiveStorageController);

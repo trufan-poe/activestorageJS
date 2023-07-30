@@ -4,18 +4,15 @@ import { ActiveStorageJS } from 'activestorageJS';
 @Controller('active-storage')
 export class ActiveStorageController {
   @Get(':blob_name')
-  findAll(
-    @Param('blob_name') blobName: string,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  findAll(@Param('blob_name') blobName: string, @Res({ passthrough: true }) res: Response) {
     res.status(HttpStatus.OK);
     return {
       url: new ActiveStorageJS().service().url(blobName, {
         disposition: 'attachment',
         filename: 'something.png',
         contentType: 'image/png',
-        tokenDuration: null,
-      }),
+        tokenDuration: null
+      })
     };
   }
 }
