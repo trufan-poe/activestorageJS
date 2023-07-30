@@ -1,7 +1,7 @@
-import { ActiveStorageJS } from 'index';
 import { createHash } from 'node:crypto';
 import { rm } from 'node:fs/promises';
-import configuration from 'config/configuration';
+import { ActiveStorageJS } from '../index';
+import configuration from '../config/configuration';
 import Variation from './variation';
 
 const path = require('node:path');

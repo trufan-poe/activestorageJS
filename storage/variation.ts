@@ -1,4 +1,4 @@
-import { ActiveStorageJS } from 'index';
+import { ActiveStorageJS } from '../index';
 
 const util = require('util');
 const im = require('imagemagick');

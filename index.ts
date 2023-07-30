@@ -1,5 +1,6 @@
-import configuration from 'config/configuration';
+/* eslint-disable import/no-cycle */
 import { verify, sign, JsonWebTokenError } from 'jsonwebtoken';
+import configuration from './config/configuration';
 import { StorageService } from './storage/service.abstract';
 
 export class ActiveStorageJS {

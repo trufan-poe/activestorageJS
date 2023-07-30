@@ -2,8 +2,8 @@
 import { join, dirname } from 'node:path';
 import { readFile, mkdir, rm, copyFile, access, constants } from 'node:fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
-import { ActiveStorageJS } from 'index';
 import { pipeline } from 'node:stream/promises';
+import { ActiveStorageJS } from '../../index';
 import config from '../../config/configuration';
 import { StorageService } from '../service.abstract';
 /**

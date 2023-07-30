@@ -1,10 +1,10 @@
 /* eslint-disable import/no-cycle */
-import { ActiveStorageJS } from 'index';
 import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { pipeline } from 'node:stream/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { rm } from 'node:fs/promises';
-import { StorageService } from 'storage/service.abstract';
+import { ActiveStorageJS } from '../../index';
+import { StorageService } from '../service.abstract';
 import configuration from '../../config/configuration';
 
 /**

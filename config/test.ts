@@ -1,4 +1,4 @@
-import { DiskService } from 'storage/disk/disk.service';
+import { DiskService } from '../storage/disk/disk.service';
 import { S3Client } from '@aws-sdk/client-s3';
 export default () => ({
   activeStorage: {

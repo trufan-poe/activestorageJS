@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe } from 'node:test';
 import { stat, rm } from 'node:fs/promises';
-import { ActiveStorageJS } from 'index';
+import { ActiveStorageJS } from '../index';
 import Variant from './variant';
-import { DiskService } from './disk/disk.service';
 
 const util = require('util');
 const im = require('imagemagick');
