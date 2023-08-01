@@ -1,8 +1,8 @@
-import { DiskService } from 'storage/disk/disk.service';
+import { DiskService } from '../storage/disk/disk.service';
 import { S3Client } from '@aws-sdk/client-s3';
 export default () => ({
   activeStorage: {
-    rootPath: process.env.ELIXIR_STORAGE_PATH || './external/activestorage_ex_rails/storage',
+    rootPath: process.env.ELIXIR_STORAGE_PATH || './external/disk/storage',
     jwtSecret: process.env.JWT_SECRET,
     linkExpiration: null,
     s3Bucket: process.env.ASSET_S3_BUCKET || 'playr-test-s3-privateassets-z34ndqmm4mgz',

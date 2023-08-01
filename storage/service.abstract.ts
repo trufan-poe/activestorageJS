@@ -9,7 +9,7 @@ export abstract class StorageService {
 
   abstract download(key: string): any;
   abstract streamDownload(key: string, filepath: string): Promise<string>;
-  abstract upload(key: string, filepath: string): void;
+  abstract upload(image: any, key: string): void;
   abstract delete(key: string, filepath: string): void;
   abstract url(key: string, opts: any): string;
   abstract exists(key: string): Promise<boolean>;

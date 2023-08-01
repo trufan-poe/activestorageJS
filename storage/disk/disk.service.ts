@@ -2,8 +2,8 @@
 import { join, dirname } from 'node:path';
 import { readFile, mkdir, rm, copyFile, access, constants } from 'node:fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
-import { ActiveStorageJS } from 'index';
 import { pipeline } from 'node:stream/promises';
+import { ActiveStorageJS } from '../../index';
 import config from '../../config/configuration';
 import { StorageService } from '../service.abstract';
 /**
@@ -123,7 +123,7 @@ export class DiskService extends StorageService {
   }
 
   /**
-   * Returns the path on disk for a given `%Blob{}` or `%Variant{}` key
+   * Returns the path on disk for a given `Blob` or `Variant` key
    *
    * @param {string} key - The blob or variant's key
    * @return {string} Path on disk
@@ -154,7 +154,7 @@ export class DiskService extends StorageService {
     try {
       await this.makePathFor(key);
       await copyFile(image.filename, this.pathFor(key));
-      // await rm(image.filename);
+      await rm(image.filename);
       return image;
     } catch (err) {
       throw new Error('The file could not be copied');

@@ -2,7 +2,7 @@
   "name": "activestorageJS",
   "version": "0.0.0",
   "description": "ActiveRecord strategy implemented in JS",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "repository": "https://github.com/surf-app/activestorageJS.git",
   "author": "Poe <poe@trufan.io>",
   "license": "MIT",

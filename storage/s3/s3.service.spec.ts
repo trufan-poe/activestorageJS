@@ -1,7 +1,7 @@
 import { CreateBucketCommand, DeleteBucketCommand, DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import { access, constants, rm } from 'node:fs/promises';
-import configuration from 'config/configuration';
 import { IncomingMessage } from 'node:http';
+import configuration from '../../config/configuration';
 import { S3Service } from './s3.service';
 
 const util = require('util');
