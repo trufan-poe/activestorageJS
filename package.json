@@ -1,5 +1,5 @@
 {
-  "name": "activestorageJS",
+  "name": "@joinsurf/activestorageJS",
   "version": "0.0.0",
   "description": "ActiveRecord strategy implemented in JS",
   "main": "dist/index.js",
