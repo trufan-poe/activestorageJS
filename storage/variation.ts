@@ -36,15 +36,15 @@ const Variation = {
    * @param {imagePath} - `imagePath`: The location of the base image
    */
   transform: async (operations, imagePath): Promise<any> => {
-    let tranformedImage = null;
+    let transformedImage = null;
     await identifyPromise(imagePath)
       .then(async (image) => {
-        tranformedImage = await Variation.applyTransformation(operations, image);
+        transformedImage = await Variation.applyTransformation(operations, image);
       })
       .catch((error) => {
         throw new Error(error.message);
       });
-    return tranformedImage;
+    return transformedImage;
   },
   applyTransformation: async (operations: any[], image): Promise<any> => {
     // Either no operations to perform or we have performed all operations
